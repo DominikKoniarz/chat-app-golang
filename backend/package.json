@@ -1,0 +1,15 @@
+{
+	"name": "chat-app-golang-backend",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"server:dev": "nodemon --watch ./**/*.go --exec go run cmd/main.go --signal SIGTERM"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"nodemon": "^3.0.1"
+	}
+}
