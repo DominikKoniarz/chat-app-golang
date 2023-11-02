@@ -4,7 +4,8 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"server:dev": "nodemon --watch ./**/*.go --exec go run cmd/main.go --signal SIGTERM"
+		"server:build": "go build -o cmd cmd/main.go",
+		"server:dev": "nodemon --watch ./**/*.go --exec go run cmd/main.go"
 	},
 	"keywords": [],
 	"author": "",
