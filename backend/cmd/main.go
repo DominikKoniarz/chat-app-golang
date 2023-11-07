@@ -1,16 +1,21 @@
 package main
 
 import (
-	"chat-app-golang/internal/initializers"
-	"chat-app-golang/internal/routes"
+	"chat-app-golang-backend/internal/initializers"
 	"log"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	app := initializers.InitFiber()
+	router := gin.Default()
 
-	routes.RegisterRoutes(app)
+	hub := initializers.InitHub()
+	go hub.Run()
 
-	log.Fatal(app.Listen(":3000"))
+	router.GET("/ws", func(ctx *gin.Context) {
+		initializers.WSHandler(hub, ctx)
+	})
 
+	log.Fatal(router.Run(":3000"))
 }
