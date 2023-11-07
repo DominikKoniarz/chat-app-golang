@@ -30,6 +30,23 @@ const sendMessage = (value: string) => {
 	);
 };
 
+const sendTestJson = async () => {
+	try {
+		const response = await fetch("http://localhost:3000/register", {
+			method: "POST",
+			body: JSON.stringify({ username: "aa", password: "qwerty123" }),
+		});
+
+		if (!response.ok) {
+			throw Error(`${response.status}`);
+		}
+
+		console.log(response.status);
+	} catch (error) {
+		console.log(error);
+	}
+};
+
 function App() {
 	const [value, setValue] = useState<string>("");
 
@@ -51,6 +68,7 @@ function App() {
 			</button>
 			<button onClick={() => socket.close()}>Close connection</button>
 			{/* <button onClick={connect}>Reconnect</button> */}
+			<button onClick={sendTestJson}>send json</button>
 		</div>
 	);
 }

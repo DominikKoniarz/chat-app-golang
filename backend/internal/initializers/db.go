@@ -3,6 +3,7 @@ package initializers
 import (
 	"fmt"
 	"log"
+	"sync"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -13,13 +14,20 @@ var user string = "root"
 var password string = ""
 var dbname string = "chat-app-golang"
 
-func InitDb() *gorm.DB {
-	dsn := fmt.Sprintf("%v:%v@tcp(%v)/%v?charset=utf8mb4&parseTime=True&loc=Local", user, password, host, dbname)
+var db *gorm.DB
+var once sync.Once
 
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatal(err)
-	}
+func GetDbInstance() *gorm.DB {
+	once.Do(func() {
+		dsn := fmt.Sprintf("%v:%v@tcp(%v)/%v?charset=utf8mb4&parseTime=True&loc=Local", user, password, host, dbname)
+
+		dbConnection, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		db = dbConnection
+	})
 
 	return db
 }
