@@ -1,75 +1,77 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 
-const socket: WebSocket = new WebSocket("ws://localhost:3000/ws");
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import ProtectedRoutes from "./utils/ProtectedRoutes";
+import Login from "@pages/Login";
+import Layout from "@components/Layout";
 
-// const connect = () => {
-// 	socket = new WebSocket("ws://localhost:3000/ws");
+// const socket: WebSocket = new WebSocket("ws://localhost:3000/ws");
+
+// // const connect = () => {
+// // 	socket = new WebSocket("ws://localhost:3000/ws");
+// // };
+
+// socket.onopen = () => {
+// 	console.log("connection established");
 // };
 
-socket.onopen = () => {
-	console.log("connection established");
-};
+// socket.onmessage = (event: MessageEvent) => {
+// 	console.log("Wiadomość: ", event.data);
+// };
 
-socket.onmessage = (event: MessageEvent) => {
-	console.log("Wiadomość: ", event.data);
-};
+// socket.onclose = () => {
+// 	console.log("connection closed");
+// };
 
-socket.onclose = () => {
-	console.log("connection closed");
-};
+// const sendMessage = (value: string) => {
+// 	if (!value) return;
 
-const sendMessage = (value: string) => {
-	if (!value) return;
+// 	socket.send(
+// 		JSON.stringify({
+// 			receiverId: "xdxd",
+// 			messageContent: value,
+// 			event: "privateMessage",
+// 		})
+// 	);
+// };
 
-	socket.send(
-		JSON.stringify({
-			receiverId: "xdxd",
-			messageContent: value,
-			event: "privateMessage",
-		})
-	);
-};
+// const sendTestJson = async () => {
+// 	try {
+// 		const response = await fetch("http://localhost:3000/register", {
+// 			method: "POST",
+// 			body: JSON.stringify({ username: "aa", password: "qwerty123" }),
+// 		});
 
-const sendTestJson = async () => {
-	try {
-		const response = await fetch("http://localhost:3000/register", {
-			method: "POST",
-			body: JSON.stringify({ username: "aa", password: "qwerty123" }),
-		});
+// 		if (!response.ok) {
+// 			throw Error(`${response.status}`);
+// 		}
 
-		if (!response.ok) {
-			throw Error(`${response.status}`);
-		}
-
-		console.log(response.status);
-	} catch (error) {
-		console.log(error);
-	}
-};
+// 		console.log(response.status);
+// 	} catch (error) {
+// 		console.log(error);
+// 	}
+// };
 
 function App() {
-	const [value, setValue] = useState<string>("");
+	// const [value, setValue] = useState<string>("");
+	const [token] = useState<string | null>("xd123");
 
 	return (
-		<div>
-			<input
-				type="text"
-				onChange={(event: ChangeEvent<HTMLInputElement>) => {
-					setValue(event.target.value);
-				}}
-				value={value}
-			/>
-			<button
-				onClick={() => {
-					sendMessage(value);
-				}}
-			>
-				Kliknij
-			</button>
-			<button onClick={() => socket.close()}>Close connection</button>
-			{/* <button onClick={connect}>Reconnect</button> */}
-			<button onClick={sendTestJson}>send json</button>
-		</div>
+		<BrowserRouter>
+			<Routes>
+				<Route path="/" element={<Layout />}>
+					<Route path="/" element={<Navigate to="/login" />} />
+					<Route index path="/login" element={<Login />} />
+					<Route path="/register" element={<div>register</div>} />
+
+					<Route path="/chat" element={<ProtectedRoutes token={token} />}>
+						<Route index element={<div>chat</div>} />
+					</Route>
+
+					<Route path="*" element={<div>Not found</div>} />
+				</Route>
+			</Routes>
+		</BrowserRouter>
 	);
 }
 

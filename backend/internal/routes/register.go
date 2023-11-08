@@ -16,4 +16,7 @@ func RegisterRoutes(router *gin.Engine) {
 	})
 
 	router.POST("/register", controllers.AddNewUser)
+
+	router.NoRoute(controllers.SendNotFound)
+
 }
