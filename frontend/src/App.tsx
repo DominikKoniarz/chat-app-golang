@@ -2,7 +2,8 @@ import { useState } from "react";
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
-import Login from "@pages/Login";
+import Login from "@pages/login/Login";
+import Register from "@pages/register/Register";
 import Layout from "@components/Layout";
 
 // const socket: WebSocket = new WebSocket("ws://localhost:3000/ws");
@@ -62,7 +63,7 @@ function App() {
 				<Route path="/" element={<Layout />}>
 					<Route path="/" element={<Navigate to="/login" />} />
 					<Route index path="/login" element={<Login />} />
-					<Route path="/register" element={<div>register</div>} />
+					<Route path="/register" element={<Register />} />
 
 					<Route path="/chat" element={<ProtectedRoutes token={token} />}>
 						<Route index element={<div>chat</div>} />

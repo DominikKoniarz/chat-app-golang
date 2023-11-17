@@ -32,7 +32,7 @@ func AddNewUser(ctx *gin.Context) {
 	foundUser := db.First(&models.User{}, "username = ?", json.Username)
 
 	if foundUser.Error == nil {
-		ctx.JSON(http.StatusForbidden, gin.H{"message": "This username already exists!"})
+		ctx.JSON(http.StatusForbidden, gin.H{"message": "This user is already taken!"})
 		return
 	}
 

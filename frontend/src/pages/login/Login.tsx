@@ -1,20 +1,20 @@
 import { useState } from "react";
-import { LOGIN_URL } from "../constants";
+import { LOGIN_URL } from "../../constants";
 import { Link } from "react-router-dom";
 
 const Login = () => {
-	const [email, setEmail] = useState<string>("");
+	const [username, setUsername] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 
 	const handleOnSubmit = async (
-		email: string,
+		username: string,
 		password: string
 	): Promise<void> => {
-		if (!email || !password) return;
+		if (!username || !password) return;
 
 		try {
 			const body: string = JSON.stringify({
-				email,
+				username,
 				password,
 			});
 
@@ -34,7 +34,7 @@ const Login = () => {
 			console.log(error);
 		}
 
-		console.log(email, password);
+		console.log(username, password);
 	};
 
 	return (
@@ -45,23 +45,26 @@ const Login = () => {
 						className="flex flex-col justify-center w-full h-fit"
 						onSubmit={(event) => {
 							event.preventDefault();
-							handleOnSubmit(email, password);
+							handleOnSubmit(username, password);
 						}}
 					>
 						<h1 className="w-full mb-4 text-[32px] font-extrabold text-center">
 							Sign in
 						</h1>
-						<label htmlFor="email" className="hidden absolute -left-[9999px]">
-							Email
+						<label
+							htmlFor="username"
+							className="hidden absolute -left-[9999px]"
+						>
+							Username
 						</label>
 						<input
 							type="text"
-							name="email"
-							id="email"
-							placeholder="Email"
+							name="username"
+							id="username"
+							placeholder="Username"
 							className="py-3 px-4 bg-[#EEE] w-full my-2 text-sm"
-							value={email}
-							onChange={(event) => setEmail(event.target.value)}
+							value={username}
+							onChange={(event) => setUsername(event.target.value)}
 						/>
 						<label
 							htmlFor="password"
