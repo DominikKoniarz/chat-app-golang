@@ -4,6 +4,7 @@ import Login from "@pages/login/Login";
 import Register from "@pages/register/Register";
 import Layout from "@components/Layout";
 import { AuthContextProvider } from "@context/AuthContext";
+import Chat from "@pages/chat/chat";
 
 // const socket: WebSocket = new WebSocket("ws://localhost:3000/ws");
 
@@ -53,8 +54,6 @@ import { AuthContextProvider } from "@context/AuthContext";
 // };
 
 function App() {
-	// const [value, setValue] = useState<string>("");
-
 	return (
 		<BrowserRouter>
 			<AuthContextProvider>
@@ -65,7 +64,7 @@ function App() {
 						<Route path="/register" element={<Register />} />
 
 						<Route path="/chat" element={<ProtectedRoutes />}>
-							<Route index element={<div>chat</div>} />
+							<Route index element={<Chat />} />
 						</Route>
 
 						<Route path="*" element={<div>Not found</div>} />

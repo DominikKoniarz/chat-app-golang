@@ -30,7 +30,9 @@ func HandleRefreshToken(ctx *gin.Context) {
 		return
 	}
 
-	refreshToken, err := jwt.ParseWithClaims(cookieValue, &utils.UserClaims{}, func(t *jwt.Token) (interface{}, error) {
+	claims := &utils.UserClaims{}
+
+	refreshToken, err := jwt.ParseWithClaims(cookieValue, claims, func(t *jwt.Token) (interface{}, error) {
 		return []byte(os.Getenv("REFRESH_TOKEN_SECRET")), nil
 	})
 	if err != nil {
@@ -45,12 +47,6 @@ func HandleRefreshToken(ctx *gin.Context) {
 
 	if !refreshToken.Valid {
 		ctx.AbortWithStatus(http.StatusUnauthorized)
-		return
-	}
-
-	claims, ok := refreshToken.Claims.(*utils.UserClaims)
-	if !ok {
-		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 

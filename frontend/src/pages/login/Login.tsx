@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { LOGIN_URL } from "../../constants";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import AuthContext from "@context/AuthContext";
 
 const Login = () => {
+	const { updateToken, token } = useContext(AuthContext);
 	const [username, setUsername] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
+	const [isPending, setIsPending] = useState<boolean>(false);
+	const [loginError, setLoginError] = useState<string>("");
+	const navigate = useNavigate();
 
 	const handleOnSubmit = async (
 		username: string,
@@ -12,6 +17,8 @@ const Login = () => {
 	): Promise<void> => {
 		if (!username || !password) return;
 
+		setIsPending(true);
+		setLoginError("");
 		try {
 			const body: string = JSON.stringify({
 				username,
@@ -25,23 +32,33 @@ const Login = () => {
 			});
 
 			if (!response.ok) {
-				throw Error("error");
+				const json = await response.json();
+				if (json.message && typeof json.message === "string") {
+					throw new Error(json.message);
+				}
+
+				throw new Error("Unknown login error!");
 			}
 
 			const json = await response.json();
-			if (json.accessToken) {
-				console.log(json.accessToken);
+			if (json.accessToken && typeof json.accessToken === "string") {
+				const token = json.accessToken as string;
+				updateToken(token);
+				navigate("/chat");
+			} else {
+				setLoginError("Internal app error!");
+				console.log("Not access token found in response!");
 			}
-
-			console.log(document.cookie);
-
-			// const json = await response.json()
-		} catch (error) {
-			console.log(error);
+		} catch (error: Error | unknown) {
+			setLoginError(
+				error instanceof Error ? error.message : "Unknown login Error!"
+			);
 		}
 
-		console.log(username, password);
+		setIsPending(false);
 	};
+
+	if (token) return <Navigate to="/chat" />;
 
 	return (
 		<main className="grid w-full h-full px-4 grow place-items-center">
@@ -87,11 +104,20 @@ const Login = () => {
 							value={password}
 							onChange={(event) => setPassword(event.target.value)}
 						/>
+						{!isPending && loginError && (
+							<div className="mx-auto mt-1 text-sm text-center w-fit">
+								{loginError}
+							</div>
+						)}
 						<button
 							type="submit"
-							className="uppercase bg-color1 px-11 py-3 font-[Arial] text-white w-fit mx-auto text-xs rounded-[20px] mt-3 font-bold tracking-wider"
+							className="uppercase bg-color1 px-11 py-3 font-[Arial] text-white w-fit mx-auto text-xs rounded-[20px] mt-3 font-bold tracking-wider min-w-[135px] min-h-[40px] transition-all duration-300"
 						>
-							Sign in
+							{isPending ? (
+								<div className="w-4 h-4 mx-auto border-[4px] rounded-full border-slate-50 border-t-blue-500 animate-spin"></div>
+							) : (
+								"Sign in"
+							)}
 						</button>
 					</form>
 				</div>
