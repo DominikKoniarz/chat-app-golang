@@ -82,7 +82,9 @@ const Login = () => {
 							onChange={(event) => setPassword(event.target.value)}
 						/>
 						{!isPending && registerStatus && (
-							<div className="mx-auto mt-1 text-sm w-fit">{registerStatus}</div>
+							<div className="mx-auto mt-1 text-sm text-center w-fit">
+								{registerStatus}
+							</div>
 						)}
 						<button
 							type="submit"

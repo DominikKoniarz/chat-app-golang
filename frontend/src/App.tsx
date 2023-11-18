@@ -1,10 +1,9 @@
-import { useState } from "react";
-
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
 import Login from "@pages/login/Login";
 import Register from "@pages/register/Register";
 import Layout from "@components/Layout";
+import { AuthContextProvider } from "@context/AuthContext";
 
 // const socket: WebSocket = new WebSocket("ws://localhost:3000/ws");
 
@@ -55,23 +54,24 @@ import Layout from "@components/Layout";
 
 function App() {
 	// const [value, setValue] = useState<string>("");
-	const [token] = useState<string | null>("xd123");
 
 	return (
 		<BrowserRouter>
-			<Routes>
-				<Route path="/" element={<Layout />}>
-					<Route path="/" element={<Navigate to="/login" />} />
-					<Route index path="/login" element={<Login />} />
-					<Route path="/register" element={<Register />} />
+			<AuthContextProvider>
+				<Routes>
+					<Route path="/" element={<Layout />}>
+						<Route path="/" element={<Navigate to="/login" />} />
+						<Route index path="/login" element={<Login />} />
+						<Route path="/register" element={<Register />} />
 
-					<Route path="/chat" element={<ProtectedRoutes token={token} />}>
-						<Route index element={<div>chat</div>} />
+						<Route path="/chat" element={<ProtectedRoutes />}>
+							<Route index element={<div>chat</div>} />
+						</Route>
+
+						<Route path="*" element={<div>Not found</div>} />
 					</Route>
-
-					<Route path="*" element={<div>Not found</div>} />
-				</Route>
-			</Routes>
+				</Routes>
+			</AuthContextProvider>
 		</BrowserRouter>
 	);
 }

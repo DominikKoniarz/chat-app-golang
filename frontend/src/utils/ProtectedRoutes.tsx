@@ -1,10 +1,10 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { useContext } from "react";
+import AuthContext from "@context/AuthContext";
 
-type Props = {
-	token: null | string;
-};
+const ProtectedRoutes = () => {
+	const { token } = useContext(AuthContext);
 
-const ProtectedRoutes = ({ token }: Props) => {
 	return !token ? <Navigate to="/login" /> : <Outlet />;
 };
 

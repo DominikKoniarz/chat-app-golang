@@ -20,6 +20,7 @@ const Login = () => {
 
 			const response: Response = await fetch(LOGIN_URL, {
 				method: "POST",
+				credentials: "include",
 				body,
 			});
 
@@ -27,7 +28,12 @@ const Login = () => {
 				throw Error("error");
 			}
 
-			console.log(response.status, await response.json());
+			const json = await response.json();
+			if (json.accessToken) {
+				console.log(json.accessToken);
+			}
+
+			console.log(document.cookie);
 
 			// const json = await response.json()
 		} catch (error) {

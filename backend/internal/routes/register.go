@@ -16,6 +16,9 @@ func RegisterRoutes(router *gin.Engine) {
 	})
 
 	router.POST("/register", controllers.AddNewUser)
+	router.POST("/login", controllers.HandleLogin)
+	router.GET("/refresh-token", controllers.HandleRefreshToken)
+	router.GET("/logout", controllers.HandleLogout)
 
 	router.NoRoute(controllers.SendNotFound)
 

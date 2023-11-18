@@ -10,9 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB = initializers.GetDbInstance()
-
-type Register struct {
+type RegisterData struct {
 	Username string `json:"username" form:"username" binding:"required"`
 	Password string `json:"password" form:"password" binding:"required"`
 }
@@ -23,9 +21,16 @@ func hashPassword(password string) (string, error) {
 }
 
 func AddNewUser(ctx *gin.Context) {
-	var json Register
+	var db *gorm.DB = initializers.GetDbInstance()
+
+	var json RegisterData
 	if err := ctx.ShouldBindJSON(&json); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Bad request!"})
+		return
+	}
+
+	if len(json.Password) < 8 {
+		ctx.JSON(http.StatusForbidden, gin.H{"message": "Password length should be over 8 chars!"})
 		return
 	}
 

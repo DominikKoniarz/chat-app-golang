@@ -5,12 +5,17 @@ import (
 	"chat-app-golang-backend/internal/models"
 	"chat-app-golang-backend/internal/routes"
 	"log"
+	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	// random strings
+	os.Setenv("ACCESS_TOKEN_SECRET", "2b7e151628aed2a6abf7158809cf4f3c")
+	os.Setenv("REFRESH_TOKEN_SECRET", "8d48a0f9c56732b1e72d9e1362c789a5")
+
 	db := initializers.GetDbInstance()
 	models.MigrateAll(db)
 
