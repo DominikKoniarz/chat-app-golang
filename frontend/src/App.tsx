@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
-import Login from "@pages/login/Login";
+import LoginPage from "@pages/login/LoginPage";
 import Register from "@pages/register/Register";
 import Layout from "@components/Layout";
 import { AuthContextProvider } from "@context/AuthContext";
-import Chat from "@pages/chat/chat";
+import Chat from "@pages/chat/Chat";
 
 // const socket: WebSocket = new WebSocket("ws://localhost:3000/ws");
 
@@ -60,7 +60,7 @@ function App() {
 				<Routes>
 					<Route path="/" element={<Layout />}>
 						<Route path="/" element={<Navigate to="/login" />} />
-						<Route index path="/login" element={<Login />} />
+						<Route index path="/login" element={<LoginPage />} />
 						<Route path="/register" element={<Register />} />
 
 						<Route path="/chat" element={<ProtectedRoutes />}>
