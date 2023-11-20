@@ -4,7 +4,7 @@ const registerNewUser = async (username: string, password: string) => {
 	if (!username || !password)
 		throw new Error("Both username and password are required!");
 
-	let resultMessage: string | null = null;
+	let resultMessage: string = "";
 
 	try {
 		const fetchConfig = {

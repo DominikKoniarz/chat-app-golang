@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
 import LoginPage from "@pages/login/LoginPage";
-import Register from "@pages/register/Register";
+import RegisterPage from "@pages/register/RegisterPage";
 import Layout from "@components/Layout";
 import { AuthContextProvider } from "@context/AuthContext";
 import Chat from "@pages/chat/Chat";
@@ -61,7 +61,7 @@ function App() {
 					<Route path="/" element={<Layout />}>
 						<Route path="/" element={<Navigate to="/login" />} />
 						<Route index path="/login" element={<LoginPage />} />
-						<Route path="/register" element={<Register />} />
+						<Route path="/register" element={<RegisterPage />} />
 
 						<Route path="/chat" element={<ProtectedRoutes />}>
 							<Route index element={<Chat />} />
