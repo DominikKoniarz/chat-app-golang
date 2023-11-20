@@ -1,9 +1,9 @@
-import { LOGOUT_URL } from "../../constants";
+import { LOGOUT_URL } from "@constants";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "@context/AuthContext";
 
-const Chat = () => {
-	const { deleteToken } = useContext(AuthContext);
+const ChatPage = () => {
+	const { deleteToken, token } = useContext(AuthContext);
 	const [socket, setSocket] = useState<WebSocket | null>(null);
 
 	const handleLogout = () => {
@@ -27,6 +27,7 @@ const Chat = () => {
 			const socket = new WebSocket("ws://localhost:3000/ws");
 
 			socket.onopen = () => {
+				socket.send(JSON.stringify({ token }));
 				console.log("połączenie otwarte");
 			};
 
@@ -35,7 +36,7 @@ const Chat = () => {
 			};
 
 			socket.onmessage = (message) => {
-				console.log("Wiadomość: ", message);
+				console.log("Wiadomość: ", message?.data);
 			};
 
 			return socket;
@@ -62,8 +63,23 @@ const Chat = () => {
 			<button type="button" onClick={handleLogout}>
 				Logout
 			</button>
+			<button
+				onClick={() => {
+					if (socket) {
+						socket.send(
+							JSON.stringify({
+								receiverID: 5,
+								event: "private-message",
+								messageString: "Testowa wiadomość!",
+							})
+						);
+					}
+				}}
+			>
+				Kliknij
+			</button>
 		</main>
 	);
 };
 
-export default Chat;
+export default ChatPage;

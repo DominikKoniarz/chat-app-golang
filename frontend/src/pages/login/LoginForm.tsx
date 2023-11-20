@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LOGIN_URL } from "../../constants";
+import { LOGIN_URL } from "@constants";
 import FormUsernameInput from "@components/FormUsernameInput";
 import LoginFormHeader from "./LoginFormHeader";
 import FormPasswordInput from "@components/FormPasswordInput";

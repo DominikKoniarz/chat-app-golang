@@ -13,6 +13,7 @@
 		"isolatedModules": true,
 		"noEmit": true,
 		"jsx": "react-jsx",
+		// "noImplicitAny": false,
 
 		/* Linting */
 		"strict": true,
@@ -24,7 +25,8 @@
 			"@pages/*": ["./src/pages/*"],
 			"@components/*": ["./src/components/*"],
 			"@utlis/*": ["./src/utlis/*"],
-			"@context/*": ["./src/context/*"]
+			"@context/*": ["./src/context/*"],
+			"@constants": ["./src/constants.ts"]
 		}
 	},
 	"include": ["src"],

@@ -1,4 +1,4 @@
-import { REGISTER_URL } from "../../constants";
+import { REGISTER_URL } from "@constants";
 
 const registerNewUser = async (username: string, password: string) => {
 	if (!username || !password)

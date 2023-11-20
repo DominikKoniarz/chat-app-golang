@@ -23,10 +23,10 @@ func (h *Hub) Run() {
 	for {
 		select {
 		case client := <-h.register:
-			var filteredClientsIDs []string
+			var filteredClientsIDs []uint
 
 			for registeredClient := range h.clients {
-				filteredClientsIDs = append(filteredClientsIDs, registeredClient.ID)
+				filteredClientsIDs = append(filteredClientsIDs, registeredClient.UserID)
 			}
 
 			h.clients[client] = true
@@ -41,7 +41,7 @@ func (h *Hub) Run() {
 			}
 		case privateMessage := <-h.private:
 			for client := range h.clients {
-				if client.ID != privateMessage.RecieverID {
+				if client.UserID != privateMessage.RecieverID {
 					continue
 				}
 

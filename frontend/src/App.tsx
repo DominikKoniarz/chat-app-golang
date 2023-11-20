@@ -4,7 +4,7 @@ import LoginPage from "@pages/login/LoginPage";
 import RegisterPage from "@pages/register/RegisterPage";
 import Layout from "@components/Layout";
 import { AuthContextProvider } from "@context/AuthContext";
-import Chat from "@pages/chat/Chat";
+import ChatPage from "@pages/chat/ChatPage";
 
 // const socket: WebSocket = new WebSocket("ws://localhost:3000/ws");
 
@@ -64,7 +64,7 @@ function App() {
 						<Route path="/register" element={<RegisterPage />} />
 
 						<Route path="/chat" element={<ProtectedRoutes />}>
-							<Route index element={<Chat />} />
+							<Route index element={<ChatPage />} />
 						</Route>
 
 						<Route path="*" element={<div>Not found</div>} />
