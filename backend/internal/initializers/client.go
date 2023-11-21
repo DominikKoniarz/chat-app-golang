@@ -25,15 +25,15 @@ var upgrader = websocket.Upgrader{
 type Client struct {
 	hub             *Hub
 	conn            *websocket.Conn
-	messageToSend   chan []PrivateMessage
+	messageToSend   chan PrivateMessage
 	UserID          uint
 	isAuthenticated bool
 }
 
 type PrivateMessage struct {
-	SenderID      uint
+	SenderID      uint   `json:"senderID,omitempty"`
 	RecieverID    uint   `json:"receiverID"`
-	Event         string `json:"event"`
+	Event         string `json:"event,omitempty"`
 	MessageString string `json:"messageString"`
 }
 
@@ -106,40 +106,71 @@ func (c *Client) readPipe() {
 		fmt.Println(string(message))
 
 		if !c.isAuthenticated {
-			authResponseMessage := AuthResponseMessage{Event: "auth"}
+			authResponseMessage := AuthResponseMessage{Authenticated: false, Event: "auth"}
 
 			userID, err := handleWSAuth(message)
 			if err != nil {
-				authResponseMessage.Authenticated = false
 				authResponseMessage.AuthStatus = err.Error()
-				c.conn.WriteJSON(&authResponseMessage)
+
+				jsonAuthResponseMessage, err := json.Marshal(&authResponseMessage)
+
+				if err != nil {
+					fmt.Println(err)
+					break
+				}
+
+				c.conn.WriteMessage(websocket.TextMessage, []byte(jsonAuthResponseMessage))
 				break
 			}
-			fmt.Println(userID)
 			c.UserID = userID
 			authResponseMessage.Authenticated = true
 
 			c.isAuthenticated = true
 			c.conn.WriteJSON(&authResponseMessage)
 		} else {
-			parsedMessage := PrivateMessage{}
+			parsedMessage := PrivateMessage{RecieverID: 6}
 
 			err = json.Unmarshal(message, &parsedMessage)
 			if err != nil {
-				errorResponse := ErrorResponse{Event: "error", ErrorString: err.Error()}
-				c.conn.WriteJSON(&errorResponse)
+				jsonErrorResponse, err := json.Marshal(&ErrorResponse{Event: "error", ErrorString: err.Error()})
+
+				if err != nil {
+					fmt.Println(err)
+					break
+				}
+
+				c.conn.WriteMessage(websocket.TextMessage, jsonErrorResponse)
 				continue
 			}
 
-			if len(parsedMessage.Event) == 0 || parsedMessage.RecieverID == 0 || len(parsedMessage.MessageString) == 0 {
-				errorResponse := ErrorResponse{Event: "error", ErrorString: "Lack of data!"}
-				c.conn.WriteJSON(&errorResponse)
+			if len(parsedMessage.MessageString) == 0 {
+				jsonErrorResponse, err := json.Marshal(&ErrorResponse{Event: "error", ErrorString: "Message string is required!"})
+
+				if err != nil {
+					fmt.Println(err)
+					break
+				}
+
+				c.conn.WriteMessage(websocket.TextMessage, jsonErrorResponse)
 				continue
 			}
-			fmt.Println(parsedMessage.MessageString)
+
+			if parsedMessage.RecieverID == 0 {
+				jsonErrorResponse, err := json.Marshal(&ErrorResponse{Event: "error", ErrorString: "Receiver ID is required!"})
+
+				if err != nil {
+					fmt.Println(err)
+					break
+				}
+
+				c.conn.WriteMessage(websocket.TextMessage, jsonErrorResponse)
+				continue
+			}
+
 			parsedMessage.SenderID = c.UserID
+			parsedMessage.Event = "message"
 
-			// c.hub.private <- parsedMessage
+			c.hub.private <- parsedMessage
 		}
 
 	}
@@ -155,8 +186,11 @@ func (c *Client) writePipe() {
 			return
 		}
 
-		fmt.Println(message, "message in write reader")
-		// c.conn.WriteMessage(websocket.TextMessage, message)
+		jsonMessage, err := json.Marshal(&message)
+		if err != nil {
+			fmt.Println(err)
+		}
+		c.conn.WriteMessage(websocket.TextMessage, jsonMessage)
 	}
 }
 
@@ -167,7 +201,7 @@ func WSHandler(hub *Hub, ctx *gin.Context) {
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 	}
 
-	client := &Client{hub: hub, conn: conn, messageToSend: make(chan []PrivateMessage), isAuthenticated: false}
+	client := &Client{hub: hub, conn: conn, messageToSend: make(chan PrivateMessage), isAuthenticated: false}
 
 	client.hub.register <- client
 

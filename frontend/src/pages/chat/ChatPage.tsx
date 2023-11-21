@@ -1,22 +1,14 @@
-import { LOGOUT_URL } from "@constants";
+import { GET_USERS_URL } from "@constants";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "@context/AuthContext";
+import UsersList from "./UsersList";
+import ChatMessagesList from "./ChatMessagesList";
+import { ChatUser } from "../../types/ChatPageTypes";
 
 const ChatPage = () => {
-	const { deleteToken, token } = useContext(AuthContext);
+	const { token } = useContext(AuthContext);
 	const [socket, setSocket] = useState<WebSocket | null>(null);
-
-	const handleLogout = () => {
-		try {
-			fetch(LOGOUT_URL, {
-				method: "GET",
-				credentials: "include",
-			});
-			deleteToken();
-		} catch (error: Error | unknown) {
-			error instanceof Error && console.log(error.message);
-		}
-	};
+	const [users, setUsers] = useState<ChatUser[]>([]);
 
 	useEffect(() => {
 		setSocket((prev) => {
@@ -31,8 +23,18 @@ const ChatPage = () => {
 				console.log("połączenie otwarte");
 			};
 
-			socket.close = () => {
+			socket.onclose = () => {
 				console.log("Połączenie zakończone");
+
+				// setTimeout(() => {
+				// 	setSocket(() => null);
+				// 	console.log("Ponawianie połączenia!");
+				// }, 1000);
+
+				socket.onclose = null;
+				socket.onopen = null;
+				socket.onmessage = null;
+				socket.onerror = null;
 			};
 
 			socket.onmessage = (message) => {
@@ -42,12 +44,40 @@ const ChatPage = () => {
 			return socket;
 		});
 
+		const fetchUsers = async () => {
+			try {
+				const response: Response = await fetch(GET_USERS_URL, {
+					method: "GET",
+					headers: { Authorization: `Bearer ${token}` },
+				});
+
+				if (!response.ok) {
+					const json = await response.json();
+
+					throw new Error(json.message || "Unknown fetch users message!");
+				}
+
+				const json = await response.json();
+				const message = json.message;
+
+				if (!message) throw new Error("Wrong users json structure!");
+
+				setUsers(message);
+			} catch (error: Error | unknown) {
+				console.log(error);
+			}
+		};
+
+		fetchUsers();
+
 		return () => {
 			if (socket) {
 				socket.close();
 			}
 		};
-	}, [socket]);
+	}, [socket, token]);
+
+	console.log(users);
 
 	// console.log(socket);
 	// console.log(
@@ -58,26 +88,9 @@ const ChatPage = () => {
 	// );
 
 	return (
-		<main className="grid w-full h-full px-4 grow place-items-center">
-			<div>chat</div>
-			<button type="button" onClick={handleLogout}>
-				Logout
-			</button>
-			<button
-				onClick={() => {
-					if (socket) {
-						socket.send(
-							JSON.stringify({
-								receiverID: 5,
-								event: "private-message",
-								messageString: "Testowa wiadomość!",
-							})
-						);
-					}
-				}}
-			>
-				Kliknij
-			</button>
+		<main className="flex flex-row w-full h-full grow ">
+			<UsersList users={users} />
+			<ChatMessagesList />
 		</main>
 	);
 };

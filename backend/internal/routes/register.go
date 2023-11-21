@@ -19,6 +19,7 @@ func RegisterRoutes(router *gin.Engine) {
 	router.POST("/login", controllers.HandleLogin)
 	router.GET("/refresh-token", controllers.HandleRefreshToken)
 	router.GET("/logout", controllers.HandleLogout)
+	router.GET("/users", controllers.GetAllUsers)
 
 	router.NoRoute(controllers.SendNotFound)
 

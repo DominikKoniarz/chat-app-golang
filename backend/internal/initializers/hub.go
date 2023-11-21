@@ -15,6 +15,7 @@ func InitHub() *Hub {
 		clients:    make(map[*Client]bool),
 		register:   make(chan *Client),
 		unregister: make(chan *Client),
+		private:    make(chan PrivateMessage),
 		// broadcast:  make(chan []byte),
 	}
 }
@@ -40,14 +41,13 @@ func (h *Hub) Run() {
 				close(client.messageToSend)
 			}
 		case privateMessage := <-h.private:
+			fmt.Println(privateMessage)
 			for client := range h.clients {
-				if client.UserID != privateMessage.RecieverID {
-					continue
+				if client.UserID == privateMessage.RecieverID {
+					fmt.Println(client.UserID)
+					client.messageToSend <- privateMessage
+					break
 				}
-
-				client.messageToSend <- []PrivateMessage{privateMessage}
-				break
-
 			}
 
 			// case message := <-h.broadcast:
