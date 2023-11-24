@@ -26,8 +26,8 @@
 			"@components/*": ["./src/components/*"],
 			"@utlis/*": ["./src/utlis/*"],
 			"@context/*": ["./src/context/*"],
-			"@constants": ["./src/constants.ts"]
-			// "@types/*": ["./src/types/*"]
+			"@constants": ["./src/constants.ts"],
+			"types/*": ["./src/types/*"]
 		}
 	},
 	"include": ["src"],

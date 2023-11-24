@@ -14,7 +14,7 @@ const Layout = () => {
 	} else {
 		return (
 			<div className="flex flex-col w-full h-full">
-				<header className="w-full p-4 text-xl font-bold text-center shrink-0">
+				<header className="w-full p-4 text-xl font-bold text-center shadow-md shrink-0">
 					Chat App Golang
 				</header>
 				<Outlet />

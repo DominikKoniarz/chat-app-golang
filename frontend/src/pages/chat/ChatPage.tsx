@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import AuthContext from "@context/AuthContext";
 import UsersList from "./UsersList";
 import ChatMessagesList from "./ChatMessagesList";
-import { ChatUser } from "../../types/ChatPageTypes";
+import { ChatUser } from "types/ChatPageTypes";
 
 const ChatPage = () => {
 	const { token } = useContext(AuthContext);
@@ -76,8 +76,6 @@ const ChatPage = () => {
 			}
 		};
 	}, [socket, token]);
-
-	console.log(users);
 
 	// console.log(socket);
 	// console.log(

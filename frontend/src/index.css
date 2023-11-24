@@ -14,4 +14,8 @@
 	#root {
 		height: 100%;
 	}
+
+	.users-list {
+		box-shadow: 1px 6px 11px 0px rgb(0 0 0 / 0.1);
+	}
 }
