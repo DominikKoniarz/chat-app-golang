@@ -18,7 +18,7 @@ const UsersListSearchInput = ({
 				placeholder="Szukaj..."
 				value={searchValue}
 				onChange={(event) => setSearchValue(event.target.value)}
-				className="w-full p-2 text-sm transition-colors duration-300 border outline-none border-slate-600 text-slate-600 placeholder-slate-700 rounded-2xl focus:placeholder-slate-400"
+				className="w-full p-2 text-sm transition-colors duration-300 border outline-none placeholder-slate-700 rounded-2xl focus:placeholder-slate-400 border-slate-100 bg-slate-100 text-slate-900"
 			/>
 		</li>
 	);

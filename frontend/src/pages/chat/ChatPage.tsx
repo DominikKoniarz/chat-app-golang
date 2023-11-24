@@ -2,7 +2,7 @@ import { GET_USERS_URL } from "@constants";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "@context/AuthContext";
 import UsersList from "./UsersList";
-import ChatMessagesList from "./ChatMessagesList";
+import ChatMessagesContainer from "./ChatMessagesContainer";
 import { ChatUser } from "types/ChatPageTypes";
 
 const ChatPage = () => {
@@ -88,7 +88,7 @@ const ChatPage = () => {
 	return (
 		<main className="flex flex-row w-full h-full grow ">
 			<UsersList users={users} />
-			<ChatMessagesList />
+			<ChatMessagesContainer />
 		</main>
 	);
 };

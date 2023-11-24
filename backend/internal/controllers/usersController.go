@@ -42,7 +42,7 @@ func GetAllUsers(ctx *gin.Context) {
 	}
 
 	users := []models.User{}
-	result := db.Find(&users)
+	result := db.Where("user_id NOT LIKE ?", claims.UserID).Find(&users)
 	if result.Error != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Internal Server Error!",

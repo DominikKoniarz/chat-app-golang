@@ -15,8 +15,13 @@ const UsersListItem = ({ user }: { user: ChatUser }) => {
 					pathname === path ? "bg-gray-100" : "bg-transparent"
 				}`}
 			>
-				<FaCircleUser />
-				{user.username}
+				<div className="hidden sm:block">
+					<FaCircleUser />
+				</div>
+				<div className="hidden sm:block">{user.username}</div>
+				<div className="block w-full text-center sm:hidden">
+					{user.username.substring(0, 1).toUpperCase()}
+				</div>
 			</Link>
 		</li>
 	);
