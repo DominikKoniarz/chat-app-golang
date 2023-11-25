@@ -31,13 +31,13 @@ func HandleLogin(ctx *gin.Context) {
 	result := db.First(&foundUser, "username = ?", jsonData.Username)
 
 	if result.Error != nil {
-		ctx.JSON(http.StatusForbidden, gin.H{"message": "This username dosen't exist!"})
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "This username dosen't exist!"})
 		return
 	}
 
 	err := bcrypt.CompareHashAndPassword([]byte(foundUser.Password), []byte(jsonData.Password))
 	if err != nil {
-		ctx.JSON(http.StatusForbidden, gin.H{"message": "Password is not correct!"})
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Password is not correct!"})
 		return
 	}
 

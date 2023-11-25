@@ -1,16 +1,17 @@
-import { ChatUser } from "types/ChatPageTypes";
 import LogoutButton from "./LogoutButton";
-
 import UsersListItem from "./UsersListItem";
 import UsersListSearchInput from "./UsersListSearchInput";
-import { useState } from "react";
 import SmallLoader from "@components/SmallLoader";
+import { useState } from "react";
+import useFetchUsers from "./useFetchUsers";
 
 type UsersListProps = {
-	users: ChatUser[];
+	token: string | null;
 };
 
-const UsersList = ({ users }: UsersListProps) => {
+const UsersList = ({ token }: UsersListProps) => {
+	// Should be here also loading state and error
+	const users = useFetchUsers(token);
 	const [searchValue, setSearchValue] = useState<string>("");
 
 	const filteredUsers = users.filter((user) =>

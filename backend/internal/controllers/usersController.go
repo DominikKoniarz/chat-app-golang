@@ -16,7 +16,14 @@ func GetAllUsers(ctx *gin.Context) {
 	db := initializers.GetDbInstance()
 
 	authorizationHeader := ctx.GetHeader("Authorization")
-	receivedToken := strings.Split(authorizationHeader, " ")[1]
+	if len(authorizationHeader) == 0 {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Token is invalid!",
+		})
+		return
+	}
+	splitedBearer := strings.Split(authorizationHeader, " ")
+	receivedToken := splitedBearer[len(splitedBearer)-1]
 
 	claims := &utils.UserClaims{}
 
@@ -28,17 +35,20 @@ func GetAllUsers(ctx *gin.Context) {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"message": "Token is invalid!",
 			})
+			return
 		}
 
 		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"message": "Token expired!",
 		})
+		return
 	}
 
 	if !token.Valid {
 		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"message": "Token is invalid!",
 		})
+		return
 	}
 
 	users := []models.User{}
@@ -47,6 +57,7 @@ func GetAllUsers(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Internal Server Error!",
 		})
+		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{

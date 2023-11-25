@@ -4,7 +4,7 @@ import { ChatUser } from "types/ChatPageTypes";
 
 const UsersListItem = ({ user }: { user: ChatUser }) => {
 	const location = useLocation();
-	const path = `/chat/${user.username}`;
+	const path = `/chat/${user.userID}`;
 	const pathname = location.pathname;
 
 	return (

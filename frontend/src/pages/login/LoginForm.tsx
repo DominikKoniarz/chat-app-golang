@@ -57,6 +57,7 @@ const LoginForm = ({ updateToken }: LoginFormProps) => {
 				console.log("Not access token found in response!");
 			}
 		} catch (error: Error | unknown) {
+			setPassword("");
 			setLoginError(
 				error instanceof Error ? error.message : "Unknown login Error!"
 			);

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { FaPaperPlane } from "react-icons/fa6";
 
-const MessageForm = () => {
+const ChatMessagesForm = () => {
 	const [inputMessageValue, setInputMessageValue] = useState<string>("");
 
 	return (
 		<form
-			name="sendMessageForm"
-			id="sendMessageForm"
+			name="chatMessagesForm"
+			id="chatMessagesForm"
 			className="flex flex-row w-full gap-3 p-3 shrink-0"
 			onSubmit={(event) => {
 				event.preventDefault();
@@ -33,4 +33,4 @@ const MessageForm = () => {
 	);
 };
 
-export default MessageForm;
+export default ChatMessagesForm;

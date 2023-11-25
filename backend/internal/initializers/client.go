@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -120,6 +121,8 @@ func (c *Client) readPipe() {
 				}
 
 				c.conn.WriteMessage(websocket.TextMessage, []byte(jsonAuthResponseMessage))
+				time.Sleep(time.Millisecond * 500)
+				fmt.Println("MEssage auth error sent")
 				break
 			}
 			c.UserID = userID
@@ -170,7 +173,7 @@ func (c *Client) readPipe() {
 			parsedMessage.SenderID = c.UserID
 			parsedMessage.Event = "message"
 
-			c.hub.private <- parsedMessage
+			// c.hub.private <- parsedMessage
 		}
 
 	}

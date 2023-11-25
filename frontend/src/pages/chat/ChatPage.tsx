@@ -1,94 +1,40 @@
-import { GET_USERS_URL } from "@constants";
-import { useContext, useEffect, useState } from "react";
+import { WS_URL } from "@constants";
+import { useContext } from "react";
 import AuthContext from "@context/AuthContext";
 import UsersList from "./UsersList";
+import { Navigate, Outlet } from "react-router-dom";
 import ChatMessagesContainer from "./ChatMessagesContainer";
-import { ChatUser } from "types/ChatPageTypes";
+import BigLoader from "@components/BigLoader";
+import AuthError from "./AuthError";
+import useSocket from "./useSocket";
 
 const ChatPage = () => {
-	const { token } = useContext(AuthContext);
-	const [socket, setSocket] = useState<WebSocket | null>(null);
-	const [users, setUsers] = useState<ChatUser[]>([]);
+	const {
+		token,
+		deleteToken,
+		isAuthenticated: checkIfAuthenticated,
+	} = useContext(AuthContext);
+	const { isAuthenticating, isAuthenticated, authenticationError } = useSocket(
+		WS_URL,
+		token
+	);
 
-	useEffect(() => {
-		setSocket((prev) => {
-			if (prev instanceof WebSocket) {
-				return prev;
-			}
-
-			const socket = new WebSocket("ws://localhost:3000/ws");
-
-			socket.onopen = () => {
-				socket.send(JSON.stringify({ token }));
-				console.log("połączenie otwarte");
-			};
-
-			socket.onclose = () => {
-				console.log("Połączenie zakończone");
-
-				// setTimeout(() => {
-				// 	setSocket(() => null);
-				// 	console.log("Ponawianie połączenia!");
-				// }, 1000);
-
-				socket.onclose = null;
-				socket.onopen = null;
-				socket.onmessage = null;
-				socket.onerror = null;
-			};
-
-			socket.onmessage = (message) => {
-				console.log("Wiadomość: ", message?.data);
-			};
-
-			return socket;
-		});
-
-		const fetchUsers = async () => {
-			try {
-				const response: Response = await fetch(GET_USERS_URL, {
-					method: "GET",
-					headers: { Authorization: `Bearer ${token}` },
-				});
-
-				if (!response.ok) {
-					const json = await response.json();
-
-					throw new Error(json.message || "Unknown fetch users message!");
-				}
-
-				const json = await response.json();
-				const message = json.message;
-
-				if (!message) throw new Error("Wrong users json structure!");
-
-				setUsers(message);
-			} catch (error: Error | unknown) {
-				console.log(error);
-			}
-		};
-
-		fetchUsers();
-
-		return () => {
-			if (socket) {
-				socket.close();
-			}
-		};
-	}, [socket, token]);
-
-	// console.log(socket);
-	// console.log(
-	// 	socket?.CONNECTING,
-	// 	socket?.OPEN,
-	// 	socket?.CLOSING,
-	// 	socket?.CLOSED
-	// );
-
-	return (
-		<main className="flex flex-row w-full h-full grow ">
-			<UsersList users={users} />
-			<ChatMessagesContainer />
+	return !checkIfAuthenticated() ? (
+		<Navigate to="/login" />
+	) : (
+		<main className="flex flex-row w-full h-full grow">
+			{isAuthenticating && <BigLoader />}
+			{!isAuthenticating && !isAuthenticated && (
+				<AuthError error={authenticationError} deleteToken={deleteToken} />
+			)}
+			{!isAuthenticating && isAuthenticated && (
+				<>
+					<UsersList token={token} />
+					<ChatMessagesContainer>
+						<Outlet />
+					</ChatMessagesContainer>
+				</>
+			)}
 		</main>
 	);
 };

@@ -10,6 +10,7 @@ type AuthContextType = {
 	updateToken: (token: string) => void;
 	deleteToken: () => void;
 	isTokenPreloaded: boolean;
+	isAuthenticated: () => boolean;
 };
 
 const initialAuthContextState: AuthContextType = {
@@ -17,6 +18,7 @@ const initialAuthContextState: AuthContextType = {
 	updateToken: () => {},
 	deleteToken: () => {},
 	isTokenPreloaded: false,
+	isAuthenticated: () => false,
 };
 
 const AuthContext = createContext<AuthContextType>(initialAuthContextState);
@@ -44,9 +46,19 @@ export const AuthContextProvider = ({
 		localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY_NAME);
 	};
 
+	const isAuthenticated = (): boolean => {
+		return token ? true : false;
+	};
+
 	return (
 		<AuthContext.Provider
-			value={{ token, updateToken, deleteToken, isTokenPreloaded }}
+			value={{
+				token,
+				updateToken,
+				deleteToken,
+				isTokenPreloaded,
+				isAuthenticated,
+			}}
 		>
 			{children}
 		</AuthContext.Provider>

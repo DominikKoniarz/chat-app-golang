@@ -1,11 +1,14 @@
-import ChatMessagesList from "./ChatMessagesList";
-import MessageForm from "./MessageForm";
+import ChatMessagesForm from "./ChatMessagesForm";
 
-const ChatMessagesContainer = () => {
+type ChatMessagesContainerProps = {
+	children: JSX.Element;
+};
+
+const ChatMessagesContainer = ({ children }: ChatMessagesContainerProps) => {
 	return (
 		<div className="flex flex-col grow shrink-0">
-			<ChatMessagesList />
-			<MessageForm />
+			{children}
+			<ChatMessagesForm />
 		</div>
 	);
 };
