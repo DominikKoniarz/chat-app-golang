@@ -5,7 +5,7 @@ import UsersList from "./UsersList";
 import { Navigate, Outlet } from "react-router-dom";
 import ChatMessagesContainer from "./ChatMessagesContainer";
 import BigLoader from "@components/BigLoader";
-import AuthError from "./AuthError";
+import Error from "./Error";
 import useSocket from "./useSocket";
 
 const ChatPage = () => {
@@ -14,7 +14,7 @@ const ChatPage = () => {
 		deleteToken,
 		isAuthenticated: checkIfAuthenticated,
 	} = useContext(AuthContext);
-	const { isAuthenticating, isAuthenticated, authenticationError } = useSocket(
+	const { isAuthenticating, isAuthenticated, cannotConnect } = useSocket(
 		WS_URL,
 		token
 	);
@@ -23,17 +23,21 @@ const ChatPage = () => {
 		<Navigate to="/login" />
 	) : (
 		<main className="flex flex-row w-full h-full grow">
-			{isAuthenticating && <BigLoader />}
-			{!isAuthenticating && !isAuthenticated && (
-				<AuthError error={authenticationError} deleteToken={deleteToken} />
-			)}
-			{!isAuthenticating && isAuthenticated && (
+			{!cannotConnect && isAuthenticating && <BigLoader />}
+			{!cannotConnect && !isAuthenticating && isAuthenticated && (
 				<>
 					<UsersList token={token} />
 					<ChatMessagesContainer>
 						<Outlet />
 					</ChatMessagesContainer>
 				</>
+			)}
+			{cannotConnect && (
+				<Error
+					error="Cannot connect with server!"
+					deleteToken={deleteToken}
+					text="Server connection error!"
+				/>
 			)}
 		</main>
 	);

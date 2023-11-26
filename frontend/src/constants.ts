@@ -6,5 +6,6 @@ export const LOGIN_URL: string = `${BASE_URL}/login`;
 export const REGISTER_URL: string = `${BASE_URL}/register`;
 export const LOGOUT_URL: string = `${BASE_URL}/logout`;
 export const GET_USERS_URL: string = `${BASE_URL}/users`;
+export const REFRESH_TOKEN_URL: string = `${BASE_URL}/refresh-token`;
 
 export const WS_URL: string = "ws://localhost:3000/ws";

@@ -1,5 +1,5 @@
 import { createContext, ReactElement, useEffect, useState } from "react";
-import { LOCAL_STORAGE_TOKEN_KEY_NAME } from "../constants";
+import { LOCAL_STORAGE_TOKEN_KEY_NAME, REFRESH_TOKEN_URL } from "../constants";
 
 type ChildrenType = {
 	children: ReactElement | undefined;
@@ -11,6 +11,7 @@ type AuthContextType = {
 	deleteToken: () => void;
 	isTokenPreloaded: boolean;
 	isAuthenticated: () => boolean;
+	regenerateToken: (cb: () => void) => void;
 };
 
 const initialAuthContextState: AuthContextType = {
@@ -19,6 +20,7 @@ const initialAuthContextState: AuthContextType = {
 	deleteToken: () => {},
 	isTokenPreloaded: false,
 	isAuthenticated: () => false,
+	regenerateToken: async () => {},
 };
 
 const AuthContext = createContext<AuthContextType>(initialAuthContextState);
@@ -50,6 +52,41 @@ export const AuthContextProvider = ({
 		return token ? true : false;
 	};
 
+	const regenerateToken = async (cb: () => void) => {
+		try {
+			const response = await fetch(REFRESH_TOKEN_URL, {
+				method: "GET",
+				credentials: "include",
+				mode: "cors",
+			});
+
+			if (!response.ok) {
+				throw new Error(`${response.status}`);
+			}
+
+			const json = await response.json();
+			let token: string = "";
+
+			if (json.accessToken) {
+				token = json.accessToken as string;
+				updateToken(token);
+			} else {
+				throw new Error("Invalid json format!");
+			}
+		} catch (error: Error | unknown) {
+			if (error instanceof Error) {
+				if (error.message === "401") {
+					deleteToken();
+				} else {
+					deleteToken();
+					console.log("Refreshing token error: ", error.message);
+				}
+			}
+		} finally {
+			cb();
+		}
+	};
+
 	return (
 		<AuthContext.Provider
 			value={{
@@ -58,6 +95,7 @@ export const AuthContextProvider = ({
 				deleteToken,
 				isTokenPreloaded,
 				isAuthenticated,
+				regenerateToken,
 			}}
 		>
 			{children}

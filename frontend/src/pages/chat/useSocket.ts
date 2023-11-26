@@ -1,13 +1,20 @@
-import { useState } from "react";
+import AuthContext from "@context/AuthContext";
+import { useContext, useState } from "react";
 import useWebSocket from "react-use-websocket";
 
-type AuthMessage = {
+const RECONNECT_INTERVAL = 2500;
+const RECONNECT_ATTEMPTS = 3;
+
+type AuthRequest = {
 	token: string;
 };
 
-type AuthResponse = {
+type SuccessAuthMessage = { authenticated: true };
+type FailedAuthMessage = { authenticated: false; authStatus: string };
+
+type ReceiverAuthMessage = {
 	event: "auth";
-} & ({ authenticated: true } | { authenticated: false; authStatus: string });
+} & (SuccessAuthMessage | FailedAuthMessage);
 
 type ReceivedTextMessage = {
 	event: "message";
@@ -22,29 +29,41 @@ type ReceivedErrorMessage = {
 };
 
 type MessageFromServer =
-	| AuthResponse
+	| ReceiverAuthMessage
 	| ReceivedTextMessage
 	| ReceivedErrorMessage;
 
 function useSocket(url: string, token: string | null) {
+	const { regenerateToken } = useContext(AuthContext);
 	const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 	const [isAuthenticating, setIsAuthenticating] = useState<boolean>(true);
-	const [authenticationError, setAuthenticationError] = useState<string>("");
+	const [triedRefreshingToken, setTriedRefreshingToken] =
+		useState<boolean>(false);
+	const [cannotConnect, setCannotConnect] = useState<boolean>(false);
 
 	const sendAuthMessage = () => {
-		const authMessage: AuthMessage = { token: token as string };
+		const authMessage: AuthRequest = { token: token as string };
 
 		sendJsonMessage(authMessage);
 	};
 
-	const handleAuthMessage = (message: AuthResponse) => {
+	const handleAuthMessage = (message: ReceiverAuthMessage) => {
 		if (message.authenticated) {
 			setIsAuthenticated(true);
 			setIsAuthenticating(false);
 		} else {
+			if (!triedRefreshingToken) return;
 			setIsAuthenticating(false);
-			setAuthenticationError(message.authStatus);
+			console.log(message.authStatus);
 		}
+	};
+
+	const handleTextMessage = (message: ReceivedTextMessage) => {
+		console.log(message);
+	};
+
+	const handleErrorMessage = (message: ReceivedErrorMessage) => {
+		console.log(message);
 	};
 
 	const receiveMessage = (e: MessageEvent) => {
@@ -57,29 +76,48 @@ function useSocket(url: string, token: string | null) {
 					handleAuthMessage(parsedMessage);
 					break;
 				case "message":
-					console.log(parsedMessage);
+					handleTextMessage(parsedMessage);
 					break;
 				case "error":
-					console.log(parsedMessage);
+					handleErrorMessage(parsedMessage);
 					break;
 				default:
-					console.log(parsedMessage);
+					console.log("Unknown message event!", parsedMessage);
 			}
 		} catch (error: Error | unknown) {
 			console.log("Message parsing error", error);
 		}
 	};
 
+	const handleClose = async () => {
+		if (!triedRefreshingToken) {
+			regenerateToken(() => {
+				setTriedRefreshingToken(true);
+			});
+		} else {
+			setIsAuthenticating(true);
+			setIsAuthenticated(false);
+		}
+	};
+
 	const { sendJsonMessage } = useWebSocket(url, {
 		onOpen: () => sendAuthMessage(),
 		onMessage: receiveMessage,
-		onClose: () => console.log("połączneie zamknięte"),
-		// reconnectAttempts: 3,
-		// reconnectInterval: 2000,
-		// shouldReconnect: () => true,
+		onClose: handleClose,
+		reconnectAttempts: RECONNECT_ATTEMPTS,
+		reconnectInterval: RECONNECT_INTERVAL,
+		shouldReconnect: () => true,
+		onReconnectStop: () => {
+			setCannotConnect(true);
+		},
 	});
 
-	return { isAuthenticating, isAuthenticated, authenticationError };
+	return {
+		isAuthenticating,
+		isAuthenticated,
+
+		cannotConnect,
+	};
 }
 
 export default useSocket;
