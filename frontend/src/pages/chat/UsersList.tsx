@@ -3,15 +3,14 @@ import UsersListItem from "./UsersListItem";
 import UsersListSearchInput from "./UsersListSearchInput";
 import SmallLoader from "@components/SmallLoader";
 import { useState } from "react";
-import useFetchUsers from "./useFetchUsers";
+import type { ChatUser } from "types/ChatPageTypes";
 
 type UsersListProps = {
-	token: string | null;
+	users: ChatUser[];
 };
 
-const UsersList = ({ token }: UsersListProps) => {
-	// Should be here also loading state and error
-	const users = useFetchUsers(token);
+const UsersList = ({ users }: UsersListProps) => {
+	// Should be here also loading state and error for users
 	const [searchValue, setSearchValue] = useState<string>("");
 
 	const filteredUsers = users.filter((user) =>

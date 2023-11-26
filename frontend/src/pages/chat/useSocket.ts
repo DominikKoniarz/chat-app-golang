@@ -40,6 +40,8 @@ function useSocket(url: string, token: string | null) {
 	const [triedRefreshingToken, setTriedRefreshingToken] =
 		useState<boolean>(false);
 	const [cannotConnect, setCannotConnect] = useState<boolean>(false);
+	const [lastTextMessage, setLastTextMessage] =
+		useState<ReceivedTextMessage | null>(null);
 
 	const sendAuthMessage = () => {
 		const authMessage: AuthRequest = { token: token as string };
@@ -60,6 +62,7 @@ function useSocket(url: string, token: string | null) {
 
 	const handleTextMessage = (message: ReceivedTextMessage) => {
 		console.log(message);
+		setLastTextMessage(message);
 	};
 
 	const handleErrorMessage = (message: ReceivedErrorMessage) => {
@@ -115,8 +118,9 @@ function useSocket(url: string, token: string | null) {
 	return {
 		isAuthenticating,
 		isAuthenticated,
-
+		sendJsonMessage,
 		cannotConnect,
+		lastTextMessage,
 	};
 }
 

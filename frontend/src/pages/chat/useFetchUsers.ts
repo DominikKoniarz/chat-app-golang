@@ -2,6 +2,11 @@ import { GET_USERS_URL } from "@constants";
 import { useEffect, useState } from "react";
 import { ChatUser } from "types/ChatPageTypes";
 
+type ReceivedChatUser = {
+	userID: number;
+	username: string;
+};
+
 const useFetchUsers = (token: string | null) => {
 	const [users, setUsers] = useState<ChatUser[]>([]);
 
@@ -20,11 +25,19 @@ const useFetchUsers = (token: string | null) => {
 				}
 
 				const json = await response.json();
-				const message = json.message;
+				const message = json.message as ReceivedChatUser[];
 
 				if (!message) throw new Error("Wrong users json structure!");
 
-				setUsers(message);
+				const users: ChatUser[] = message.map((user) => {
+					return {
+						userID: user.userID,
+						username: user.username,
+						messages: [],
+					};
+				});
+
+				setUsers(users);
 			} catch (error: Error | unknown) {
 				console.log(error);
 			}

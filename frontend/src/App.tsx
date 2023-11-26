@@ -4,7 +4,7 @@ import RegisterPage from "@pages/register/RegisterPage";
 import Layout from "@components/Layout";
 import { AuthContextProvider } from "@context/AuthContext";
 import ChatPage from "@pages/chat/ChatPage";
-import ChatMessagesList from "@pages/chat/ChatMessagesList";
+import ChatMessagesContainer from "@pages/chat/ChatMessagesContainer";
 
 function App() {
 	return (
@@ -20,7 +20,7 @@ function App() {
 							<Route
 								index
 								path="/chat/:userID?"
-								element={<ChatMessagesList />}
+								element={<ChatMessagesContainer />}
 							/>
 						</Route>
 

@@ -173,7 +173,7 @@ func (c *Client) readPipe() {
 			parsedMessage.SenderID = c.UserID
 			parsedMessage.Event = "message"
 
-			// c.hub.private <- parsedMessage
+			c.hub.private <- parsedMessage
 		}
 
 	}

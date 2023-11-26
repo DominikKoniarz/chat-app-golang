@@ -1,8 +1,36 @@
-import { useState } from "react";
 import { FaPaperPlane } from "react-icons/fa6";
+import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 
-const ChatMessagesForm = () => {
-	const [inputMessageValue, setInputMessageValue] = useState<string>("");
+type ChatMessagesFormProps = {
+	inputMessageValue: string;
+	setInputMessageValue: React.Dispatch<React.SetStateAction<string>>;
+	userID: string;
+	sendJsonMessage: SendJsonMessage;
+};
+
+type TextPrivateMessage = {
+	receiverID: number;
+	event: string;
+	messageString: string;
+};
+
+const ChatMessagesForm = ({
+	inputMessageValue,
+	setInputMessageValue,
+	userID,
+	sendJsonMessage,
+}: ChatMessagesFormProps) => {
+	const sendTextMessage = (userID: string, message: string) => {
+		const userIDAsNumber = parseInt(userID);
+		const newMessage: TextPrivateMessage = {
+			receiverID: userIDAsNumber,
+			event: "message",
+			messageString: message,
+		};
+
+		sendJsonMessage(newMessage);
+		setInputMessageValue("");
+	};
 
 	return (
 		<form
@@ -11,6 +39,8 @@ const ChatMessagesForm = () => {
 			className="flex flex-row w-full gap-3 p-3 shrink-0"
 			onSubmit={(event) => {
 				event.preventDefault();
+				if (inputMessageValue.length === 0) return;
+				sendTextMessage(userID, inputMessageValue);
 			}}
 		>
 			<input
