@@ -29,13 +29,15 @@ const useFetchUsers = (token: string | null) => {
 
 				if (!message) throw new Error("Wrong users json structure!");
 
-				const users: ChatUser[] = message.map((user) => {
-					return {
-						userID: user.userID,
-						username: user.username,
-						messages: [],
-					};
-				});
+				// const users: ChatUser[] = message.map((user) => {
+				// 	return {
+				// 		userID: user.userID,
+				// 		username: user.username,
+				// 		messages: [],
+				// 	};
+				// });
+
+				const users: ChatUser[] = json.message;
 
 				setUsers(users);
 			} catch (error: Error | unknown) {

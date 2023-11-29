@@ -18,7 +18,7 @@ const UsersList = ({ users }: UsersListProps) => {
 	);
 
 	return (
-		<ul className="flex flex-col w-16 h-full p-2 overflow-y-auto transition-all duration-100 gap-y-2 users-list sm:w-48 md:w-56 shrink-0">
+		<ul className="z-10 h-[calc(100vh-60px)] flex flex-col w-16 gap-2 p-2 transition-all duration-100 shrink-0 users-list sm:w-48 md:w-56">
 			<UsersListSearchInput
 				searchValue={searchValue}
 				setSearchValue={setSearchValue}

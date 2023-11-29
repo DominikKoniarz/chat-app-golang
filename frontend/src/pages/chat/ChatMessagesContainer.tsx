@@ -16,12 +16,12 @@ const ChatMessagesContainer = () => {
 	const { sendJsonMessage } = useOutletContext<OutletContext>();
 
 	return (
-		<div className="flex flex-col grow shrink-0">
+		<div className="flex flex-col w-full overflow-hidden">
 			{userID === undefined ? (
 				<PickChatMessage />
 			) : (
 				<>
-					<ChatMessagesList userID={userID} />
+					<ChatMessagesList />
 					<ChatMessagesForm
 						inputMessageValue={inputMessageValue}
 						setInputMessageValue={setInputMessageValue}

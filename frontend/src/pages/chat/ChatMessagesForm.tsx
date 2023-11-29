@@ -36,7 +36,7 @@ const ChatMessagesForm = ({
 		<form
 			name="chatMessagesForm"
 			id="chatMessagesForm"
-			className="flex flex-row w-full gap-3 p-3 shrink-0"
+			className="flex flex-row w-full gap-3 p-3 bg-white shrink-0"
 			onSubmit={(event) => {
 				event.preventDefault();
 				if (inputMessageValue.length === 0) return;
