@@ -8,19 +8,29 @@ import Error from "./Error";
 import useSocket from "./useSocket";
 import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 import useFetchUsers from "./useFetchUsers";
-import { ChatUser } from "types/ChatPageTypes";
 
-export type OutletContext = {
-	sendJsonMessage: SendJsonMessage;
-	users: ChatUser[];
+type LoggedInUserMessage = {
+	type: "own";
+	timestamp: number;
+	sendToUserID: number;
+	messageString: string;
 };
 
-type UserMessage = {
+type OtherUserMessage = {
+	type: "foreign";
 	timestamp: number;
 	senderID: number;
 	receiverID: number;
 	senderUsername: string;
 	messageString: string;
+};
+
+export type Message = LoggedInUserMessage | OtherUserMessage;
+
+export type OutletContext = {
+	sendJsonMessage: SendJsonMessage;
+	addLoggedInUserMessage: (id: number, messageString: string) => void;
+	messages: Message[];
 };
 
 const ChatPage = () => {
@@ -37,9 +47,7 @@ const ChatPage = () => {
 		sendJsonMessage,
 		lastTextMessage,
 	} = useSocket(WS_URL, token);
-	const [messages, setMessages] = useState<UserMessage[]>([]);
-
-	// console.log(lastTextMessage);
+	const [messages, setMessages] = useState<Message[]>([]);
 
 	useEffect(() => {
 		if (lastTextMessage === null) return;
@@ -56,7 +64,8 @@ const ChatPage = () => {
 		}
 		const senderUsername = senderUser.username;
 
-		const newMessage: UserMessage = {
+		const newMessage: OtherUserMessage = {
+			type: "foreign",
 			receiverID,
 			senderID,
 			timestamp: Date.now(),
@@ -69,7 +78,18 @@ const ChatPage = () => {
 		});
 	}, [lastTextMessage, users]);
 
-	console.log(messages);
+	const addLoggedInUserMessage = (id: number, messageString: string): void => {
+		const newMessage: LoggedInUserMessage = {
+			type: "own",
+			timestamp: Date.now(),
+			sendToUserID: id,
+			messageString,
+		};
+
+		setMessages((prev) => {
+			return [...prev, newMessage];
+		});
+	};
 
 	return !checkIfAuthenticated() ? (
 		<Navigate to="/login" />
@@ -80,7 +100,13 @@ const ChatPage = () => {
 				<>
 					<UsersList users={users} />
 					<Outlet
-						context={{ sendJsonMessage, users } satisfies OutletContext}
+						context={
+							{
+								sendJsonMessage,
+								addLoggedInUserMessage,
+								messages,
+							} satisfies OutletContext
+						}
 					/>
 				</>
 			)}

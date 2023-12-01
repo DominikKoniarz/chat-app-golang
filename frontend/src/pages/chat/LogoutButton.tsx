@@ -22,10 +22,10 @@ const LogoutButton = () => {
 		<button
 			type="button"
 			onClick={handleLogout}
-			className="flex flex-row items-center justify-start w-full gap-3 p-3 mt-auto transition-colors duration-300 rounded-lg shrink-0 hover:bg-gray-200 active:bg-gray-100 text-color1"
+			className="flex flex-row items-center justify-center w-full gap-3 p-3 mt-auto transition-colors duration-300 rounded-lg sm:justify-start shrink-0 hover:bg-gray-200 active:bg-gray-100 text-color1"
 		>
 			<FaArrowRightFromBracket />
-			Logout
+			<div className="hidden sm:block w-fit h-fit">Logout</div>
 		</button>
 	);
 };

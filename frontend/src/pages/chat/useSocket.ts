@@ -56,12 +56,10 @@ function useSocket(url: string, token: string | null) {
 		} else {
 			if (!triedRefreshingToken) return;
 			setIsAuthenticating(false);
-			console.log(message.authStatus);
 		}
 	};
 
 	const handleTextMessage = (message: ReceivedTextMessage) => {
-		console.log(message);
 		setLastTextMessage(message);
 	};
 

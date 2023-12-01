@@ -6,6 +6,7 @@ type ChatMessagesFormProps = {
 	setInputMessageValue: React.Dispatch<React.SetStateAction<string>>;
 	userID: string;
 	sendJsonMessage: SendJsonMessage;
+	addLoggedInUserMessage: (id: number, messageString: string) => void;
 };
 
 type TextPrivateMessage = {
@@ -19,6 +20,7 @@ const ChatMessagesForm = ({
 	setInputMessageValue,
 	userID,
 	sendJsonMessage,
+	addLoggedInUserMessage,
 }: ChatMessagesFormProps) => {
 	const sendTextMessage = (userID: string, message: string) => {
 		const userIDAsNumber = parseInt(userID);
@@ -30,6 +32,7 @@ const ChatMessagesForm = ({
 
 		sendJsonMessage(newMessage);
 		setInputMessageValue("");
+		addLoggedInUserMessage(userIDAsNumber, message);
 	};
 
 	return (

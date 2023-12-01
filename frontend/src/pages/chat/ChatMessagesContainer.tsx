@@ -13,7 +13,8 @@ const ChatMessagesContainer = () => {
 	const [inputMessageValue, setInputMessageValue] = useState<string>("");
 	const params = useParams() as ChatMessageListParams;
 	const userID = params.userID;
-	const { sendJsonMessage } = useOutletContext<OutletContext>();
+	const { sendJsonMessage, addLoggedInUserMessage, messages } =
+		useOutletContext<OutletContext>();
 
 	return (
 		<div className="flex flex-col w-full overflow-hidden">
@@ -21,12 +22,13 @@ const ChatMessagesContainer = () => {
 				<PickChatMessage />
 			) : (
 				<>
-					<ChatMessagesList />
+					<ChatMessagesList messages={messages} userID={userID} />
 					<ChatMessagesForm
 						inputMessageValue={inputMessageValue}
 						setInputMessageValue={setInputMessageValue}
 						userID={userID}
 						sendJsonMessage={sendJsonMessage}
+						addLoggedInUserMessage={addLoggedInUserMessage}
 					/>
 				</>
 			)}
