@@ -8,6 +8,7 @@ import Error from "./Error";
 import useSocket from "./useSocket";
 import { SendJsonMessage } from "react-use-websocket/dist/lib/types";
 import useFetchUsers from "./useFetchUsers";
+import { ChatUser } from "types/ChatPageTypes";
 
 type LoggedInUserMessage = {
 	type: "own";
@@ -21,7 +22,6 @@ type OtherUserMessage = {
 	timestamp: number;
 	senderID: number;
 	receiverID: number;
-	senderUsername: string;
 	messageString: string;
 };
 
@@ -31,6 +31,7 @@ export type OutletContext = {
 	sendJsonMessage: SendJsonMessage;
 	addLoggedInUserMessage: (id: number, messageString: string) => void;
 	messages: Message[];
+	users: ChatUser[];
 };
 
 const ChatPage = () => {
@@ -56,21 +57,12 @@ const ChatPage = () => {
 		const senderID = lastTextMessage.senderID;
 		const messageString = lastTextMessage.messageString;
 
-		const senderUser = users.find((user) => user.userID === senderID);
-
-		if (senderUser === undefined) {
-			console.log("No user with specified ID", senderID);
-			return;
-		}
-		const senderUsername = senderUser.username;
-
 		const newMessage: OtherUserMessage = {
 			type: "foreign",
 			receiverID,
 			senderID,
 			timestamp: Date.now(),
 			messageString,
-			senderUsername,
 		};
 
 		setMessages((prev) => {
@@ -105,6 +97,7 @@ const ChatPage = () => {
 								sendJsonMessage,
 								addLoggedInUserMessage,
 								messages,
+								users,
 							} satisfies OutletContext
 						}
 					/>

@@ -192,6 +192,7 @@ func (c *Client) writePipe() {
 		jsonMessage, err := json.Marshal(&message)
 		if err != nil {
 			fmt.Println(err)
+			continue
 		}
 		c.conn.WriteMessage(websocket.TextMessage, jsonMessage)
 	}

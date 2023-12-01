@@ -2,13 +2,19 @@ import { useEffect, useRef } from "react";
 import { Message } from "./ChatPage";
 import LoggedUserMessage from "./LoggedUserMessage";
 import OtherUserMessage from "./OtherUserMessage";
+import { ChatUser } from "types/ChatPageTypes";
 
 type ChatMessagesListProps = {
 	messages: Message[];
 	userID: string;
+	users: ChatUser[];
 };
 
-const ChatMessagesList = ({ messages, userID }: ChatMessagesListProps) => {
+const ChatMessagesList = ({
+	messages,
+	userID,
+	users,
+}: ChatMessagesListProps) => {
 	const listBotton = useRef<HTMLDivElement | null>(null);
 
 	const filteredMessages: Message[] = messages.filter((message) => {
@@ -19,6 +25,12 @@ const ChatMessagesList = ({ messages, userID }: ChatMessagesListProps) => {
 		}
 	});
 
+	const foundUser = users.find((user) => user.userID === parseInt(userID));
+
+	const foundUserUsername: string = foundUser
+		? foundUser.username
+		: "Unknown user";
+
 	useEffect(() => {
 		if (!listBotton.current) return;
 
@@ -28,20 +40,25 @@ const ChatMessagesList = ({ messages, userID }: ChatMessagesListProps) => {
 	return (
 		<ul className="space-y-5 px-5 pt-5 list-none h-[calc(100vh-60px-62px)] overflow-y-auto w-full overflow-x-hidden">
 			{filteredMessages.length === 0 ? (
-				<div className="w-full text-sm text-center md:text-base">
+				<li className="w-full text-sm text-center md:text-base">
+					Chatuj z: {foundUserUsername}
+					<br />
 					Możecie teraz pisać do siebie!
-				</div>
+				</li>
 			) : (
-				filteredMessages.map((message) => {
+				filteredMessages.map((message, index) => {
 					if (message.type === "foreign") {
 						return (
 							<OtherUserMessage
+								key={index}
 								message={message.messageString}
-								username={message.senderUsername}
+								username={foundUserUsername}
 							/>
 						);
 					} else {
-						return <LoggedUserMessage message={message.messageString} />;
+						return (
+							<LoggedUserMessage key={index} message={message.messageString} />
+						);
 					}
 				})
 			)}

@@ -13,7 +13,7 @@ const ChatMessagesContainer = () => {
 	const [inputMessageValue, setInputMessageValue] = useState<string>("");
 	const params = useParams() as ChatMessageListParams;
 	const userID = params.userID;
-	const { sendJsonMessage, addLoggedInUserMessage, messages } =
+	const { sendJsonMessage, addLoggedInUserMessage, messages, users } =
 		useOutletContext<OutletContext>();
 
 	return (
@@ -22,7 +22,7 @@ const ChatMessagesContainer = () => {
 				<PickChatMessage />
 			) : (
 				<>
-					<ChatMessagesList messages={messages} userID={userID} />
+					<ChatMessagesList messages={messages} userID={userID} users={users} />
 					<ChatMessagesForm
 						inputMessageValue={inputMessageValue}
 						setInputMessageValue={setInputMessageValue}

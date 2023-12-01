@@ -49,11 +49,6 @@ func (h *Hub) Run() {
 					break
 				}
 			}
-
-			// case message := <-h.broadcast:
-			// 	for client := range h.clients {
-			// 		client.messageToSend <- message
-			// 	}
 		}
 	}
 }

@@ -52,6 +52,7 @@ const ChatMessagesForm = ({
 				type="text"
 				placeholder="Aa"
 				className="w-full p-2 text-sm transition-all duration-300 border outline-none placeholder-slate-700 rounded-2xl focus:placeholder-slate-400 border-slate-100 bg-slate-100 text-slate-900"
+				autoComplete="off"
 			/>
 
 			<button
