@@ -3,7 +3,9 @@ package routes
 import (
 	"chat-app-golang-backend/internal/controllers"
 	"chat-app-golang-backend/internal/initializers"
+	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,9 +23,14 @@ func RegisterRoutes(router *gin.Engine) {
 	router.GET("/refresh-token", controllers.HandleRefreshToken)
 	router.GET("/logout", controllers.HandleLogout)
 	router.GET("/users", controllers.GetAllUsers)
-	// gin release
+
+	htmlFilePath, err := filepath.Abs(filepath.Join("..", "frontend", "dist", "index.html"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	if os.Getenv("GO_ENV") == "production" {
-		router.LoadHTMLFiles("../frontend/dist/index.html")
+		router.LoadHTMLFiles(htmlFilePath)
 
 		router.GET("/", controllers.SendRootPage)
 		router.GET("/chat", controllers.SendRootPage)
