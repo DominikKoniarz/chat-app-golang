@@ -21,6 +21,7 @@ func InitHub() *Hub {
 }
 
 func (h *Hub) Run() {
+	fmt.Println("Starting ws hub")
 	for {
 		select {
 		case client := <-h.register:

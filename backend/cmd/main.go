@@ -4,6 +4,7 @@ import (
 	"chat-app-golang-backend/internal/initializers"
 	"chat-app-golang-backend/internal/models"
 	"chat-app-golang-backend/internal/routes"
+	"fmt"
 	"log"
 	"os"
 
@@ -48,4 +49,5 @@ func main() {
 	}
 
 	log.Fatal(router.Run(":" + port))
+	fmt.Println("Web server started on port:", port)
 }
