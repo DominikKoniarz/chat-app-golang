@@ -12,4 +12,4 @@ export const REFRESH_TOKEN_URL: string = `${BASE_URL}/refresh-token`;
 
 export const WS_URL: string = !import.meta.env.PROD
 	? "ws://localhost:3000/ws"
-	: "ws://chatappgolang.dominikkoniarz.pl/ws";
+	: "wss://chatappgolang.dominikkoniarz.pl/ws";
