@@ -104,8 +104,6 @@ func (c *Client) readPipe() {
 			break
 		}
 
-		fmt.Println(string(message))
-
 		if !c.isAuthenticated {
 			authResponseMessage := AuthResponseMessage{Authenticated: false, Event: "auth"}
 

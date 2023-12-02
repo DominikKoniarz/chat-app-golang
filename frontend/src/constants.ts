@@ -1,4 +1,6 @@
-const BASE_URL: string = "http://localhost:3000";
+const BASE_URL: string = !import.meta.env.PROD
+	? "http://localhost:3000"
+	: "https://chatappgolang.dominikkoniarz.pl/";
 
 export const LOCAL_STORAGE_TOKEN_KEY_NAME: string = "chat-app-golang-token";
 

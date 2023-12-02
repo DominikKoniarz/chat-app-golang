@@ -24,16 +24,16 @@ func (h *Hub) Run() {
 	for {
 		select {
 		case client := <-h.register:
-			var filteredClientsIDs []uint
+			// var filteredClientsIDs []uint
 
-			for registeredClient := range h.clients {
-				filteredClientsIDs = append(filteredClientsIDs, registeredClient.UserID)
-			}
+			// for registeredClient := range h.clients {
+			// 	filteredClientsIDs = append(filteredClientsIDs, registeredClient.UserID)
+			// }
 
 			h.clients[client] = true
 
-			fmt.Println(filteredClientsIDs)
-			fmt.Println(h.clients, "client register")
+			// fmt.Println(filteredClientsIDs)
+			// fmt.Println(h.clients, "client register")
 		case client := <-h.unregister:
 			_, ok := h.clients[client]
 			if ok {
@@ -44,7 +44,7 @@ func (h *Hub) Run() {
 			fmt.Println(privateMessage)
 			for client := range h.clients {
 				if client.UserID == privateMessage.RecieverID {
-					fmt.Println(client.UserID)
+					// fmt.Println(client.UserID)
 					client.messageToSend <- privateMessage
 					break
 				}
