@@ -21,8 +21,16 @@ func main() {
 
 	router := gin.Default()
 
+	var AllowedOrigins []string
+
+	if os.Getenv("GO_ENV") != "production" {
+		AllowedOrigins = []string{"http://localhost:5173", "http://127.0.0.1:5173"}
+	} else {
+		AllowedOrigins = []string{"https://chatappgolang.dominikkoniarz.pl/"}
+	}
+
 	router.Use(cors.New(cors.Config{
-		// AllowOrigins:     []string{"https://foo.com"},
+		AllowOrigins: AllowedOrigins,
 		// AllowMethods:     []string{"PUT", "PATCH"},
 		AllowHeaders: []string{"Authorization"},
 		// ExposeHeaders:    []string{"Content-Length"},

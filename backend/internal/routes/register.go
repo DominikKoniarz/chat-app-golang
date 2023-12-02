@@ -21,7 +21,7 @@ func RegisterRoutes(router *gin.Engine) {
 	router.GET("/refresh-token", controllers.HandleRefreshToken)
 	router.GET("/logout", controllers.HandleLogout)
 	router.GET("/users", controllers.GetAllUsers)
-
+	// gin release
 	if os.Getenv("GO_ENV") == "production" {
 		router.LoadHTMLFiles("../frontend/dist/index.html")
 
