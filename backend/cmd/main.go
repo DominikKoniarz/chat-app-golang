@@ -42,5 +42,10 @@ func main() {
 
 	routes.RegisterRoutes(router)
 
-	log.Fatal(router.Run(":3000"))
+	port := os.Getenv("PORT")
+	if len(port) == 0 {
+		port = "3000"
+	}
+
+	log.Fatal(router.Run(":" + port))
 }
