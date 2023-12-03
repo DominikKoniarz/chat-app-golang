@@ -39,6 +39,7 @@ func RegisterRoutes(router *gin.Engine) {
 
 		router.GET("/", controllers.SendRootPage)
 		router.GET("/chat", controllers.SendRootPage)
+		router.GET("/chat/:id", controllers.SendRootPage)
 		router.GET("/login", controllers.SendRootPage)
 
 		router.Static("/assets", assetsPath)
