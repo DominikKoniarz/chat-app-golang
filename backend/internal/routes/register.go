@@ -29,6 +29,11 @@ func RegisterRoutes(router *gin.Engine) {
 		log.Fatal(err)
 	}
 
+	assetsPath, err := filepath.Abs(filepath.Join("..", "frontend", "dist", "assets"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	if os.Getenv("GO_ENV") == "production" {
 		router.LoadHTMLFiles(htmlFilePath)
 
@@ -36,7 +41,7 @@ func RegisterRoutes(router *gin.Engine) {
 		router.GET("/chat", controllers.SendRootPage)
 		router.GET("/login", controllers.SendRootPage)
 
-		router.Static("/assets", "../frontend/dist/assets")
+		router.Static("/assets", assetsPath)
 	}
 
 	router.NoRoute(controllers.SendNotFound)
