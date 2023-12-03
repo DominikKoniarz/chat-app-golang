@@ -30,6 +30,8 @@ func main() {
 		AllowedOrigins = []string{"http://localhost:5173", "http://127.0.0.1:5173"}
 	} else {
 		AllowedOrigins = []string{"https://chatappgolang.dominikkoniarz.pl/"}
+
+		gin.SetMode(gin.ReleaseMode)
 	}
 
 	router.Use(cors.New(cors.Config{
