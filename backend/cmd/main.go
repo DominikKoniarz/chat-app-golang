@@ -22,8 +22,6 @@ func main() {
 	db := initializers.GetDbInstance()
 	models.MigrateAll(db)
 
-	router := gin.Default()
-
 	var AllowedOrigins []string
 
 	if os.Getenv("GO_ENV") != "production" {
@@ -33,6 +31,8 @@ func main() {
 
 		gin.SetMode(gin.ReleaseMode)
 	}
+
+	router := gin.Default()
 
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: AllowedOrigins,
