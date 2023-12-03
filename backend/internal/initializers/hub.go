@@ -42,7 +42,6 @@ func (h *Hub) Run() {
 				close(client.messageToSend)
 			}
 		case privateMessage := <-h.private:
-			fmt.Println(privateMessage)
 			for client := range h.clients {
 				if client.UserID == privateMessage.RecieverID {
 					// fmt.Println(client.UserID)
