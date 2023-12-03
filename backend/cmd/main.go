@@ -10,12 +10,14 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	// random strings
-	os.Setenv("ACCESS_TOKEN_SECRET", "2b7e151628aed2a6abf7158809cf4f3c")
-	os.Setenv("REFRESH_TOKEN_SECRET", "8d48a0f9c56732b1e72d9e1362c789a5")
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file", err)
+	}
 
 	db := initializers.GetDbInstance()
 	models.MigrateAll(db)
