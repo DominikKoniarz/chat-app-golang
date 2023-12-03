@@ -5,6 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"server:build": "go build -o cmd cmd/main.go",
+		"server:build-root": "go build cmd/main.go",
 		"server:dev": "nodemon --watch ./**/*.go --exec go run cmd/main.go"
 	},
 	"keywords": [],
