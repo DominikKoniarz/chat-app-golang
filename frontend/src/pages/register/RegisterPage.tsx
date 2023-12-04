@@ -3,7 +3,7 @@ import RegisterForm from "./RegisterForm";
 
 const RegisterPage = () => {
 	return (
-		<main className="grid w-full h-full px-4 grow place-items-center">
+		<main className="grid w-full h-[calc(100%-60px)] px-4 place-items-center">
 			<div className="max-w-3xl grid grid-cols-2 max-h-[480px] shadow-2xl w-full h-full rounded-2xl overflow-hidden">
 				<div className="h-full from-[#FF4B2B] to-[#FF416C] bg-gradient-to-r flex flex-col justify-center px-6 md:px-10">
 					<h1 className="w-full text-[32px] font-extrabold text-center text-white">

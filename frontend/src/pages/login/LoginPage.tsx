@@ -9,7 +9,7 @@ const LoginPage = () => {
 	if (token) return <Navigate to="/chat" />;
 
 	return (
-		<main className="grid w-full h-full px-4 grow place-items-center">
+		<main className="grid w-full h-[calc(100%-60px)] px-4 place-items-center">
 			<div className="max-w-3xl grid grid-cols-2 max-h-[480px] shadow-2xl w-full h-full rounded-2xl overflow-hidden">
 				<div className="grid h-full p-3 px-6 md:mx-12 place-items-center">
 					<LoginForm updateToken={updateToken} />
