@@ -120,7 +120,6 @@ func (c *Client) readPipe() {
 
 				c.conn.WriteMessage(websocket.TextMessage, []byte(jsonAuthResponseMessage))
 				time.Sleep(time.Millisecond * 500)
-				fmt.Println("MEssage auth error sent")
 				break
 			}
 			c.UserID = userID
