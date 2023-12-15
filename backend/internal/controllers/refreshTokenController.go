@@ -17,6 +17,7 @@ func HandleRefreshToken(ctx *gin.Context) {
 	db := initializers.GetDbInstance()
 
 	cookieValue, err := ctx.Cookie("chat-app-golang-refresh-token")
+	fmt.Println("cookies:", ctx.Request.Cookies())
 	fmt.Println(cookieValue)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
