@@ -89,12 +89,7 @@ func HandleRefreshToken(ctx *gin.Context) {
 	foundUser.RefreshToken = newRefreshToken
 	db.Save(&foundUser)
 
-	var domain string
-	if os.Getenv("GO_ENV") != "production" {
-		domain = "localhost"
-	} else {
-		domain = os.Getenv("RT_COOKIE_DOMAIN")
-	}
+	var domain string = utils.GetRefreshTokenCookieDomain()
 
 	ctx.SetCookie("chat-app-golang-refresh-token", newRefreshToken, 60*60*24, "/", domain, true, true)
 	ctx.JSON(http.StatusOK, gin.H{

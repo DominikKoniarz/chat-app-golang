@@ -72,7 +72,9 @@ func HandleLogin(ctx *gin.Context) {
 	foundUser.RefreshToken = refreshToken
 	db.Save(&foundUser)
 
-	ctx.SetCookie("chat-app-golang-refresh-token", refreshToken, 60*60*24, "/", "localhost", true, true)
+	var domain string = utils.GetRefreshTokenCookieDomain()
+
+	ctx.SetCookie("chat-app-golang-refresh-token", refreshToken, 60*60*24, "/", domain, true, true)
 	ctx.JSON(http.StatusOK, gin.H{
 		"accessToken": accessToken,
 	})
